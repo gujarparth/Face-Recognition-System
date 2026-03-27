@@ -42,7 +42,7 @@ def markAttendance(name):
             engine.say(f"Thank you, {name} , Your Attendance has been marked!")
             engine.runAndWait()
 
-print("[INFO] Initializing VIT Smart Attendance System...")
+print("[INFO] Initializing Smart Attendance System...")
 
 # 1. Load and Encode (Using the NumPy 1.x fix we did earlier)
 image_path = "Known_Faces/Shivang.jpeg"
@@ -87,8 +87,8 @@ while True:
         cv2.rectangle(img, (left, top), (right, bottom), color, 2)
         cv2.putText(img, name, (left, bottom + 25), cv2.FONT_HERSHEY_DUPLEX, 0.8, color, 1)
 
-    cv2.imshow("VIT Smart Attendance", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'): break
+    cv2.imshow("Smart Attendance System", img)
+    if cv2.waitKey(1) & 0xFF == ord('b'): break
 
 cap.release()
 cv2.destroyAllWindows()
