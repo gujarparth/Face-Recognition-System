@@ -1,62 +1,72 @@
 # 🤖 Smart Attendance System (Face Recognition)
 
-A high-performance, real-time attendance logging system developed as a **CO5 Case Study at VIT Bhopal**. This project leverages Deep Learning to identify authorized faces, log attendance with precise timestamps in a CSV format, and provide personalized auditory feedback.
+A high-performance, real-time attendance logging system developed as a **VITyarthi Capstone Project**. This project leverages Deep Learning to identify authorized faces, log attendance with precise timestamps in a CSV format, and features an automated email reporting pipeline with personalized auditory feedback.
 
 ---
 
 ## ✨ Key Features
 * **Real-Time Identification:** Fast face detection and matching using HOG (Histogram of Oriented Gradients) and 128-dimensional ResNet embeddings.
-* **Automated CSV Logging:** Generates a daily attendance report (Attendance.csv) compatible with Microsoft Excel.
-* **Smart Duplicate Prevention:** Logic ensures a person is only logged once per day to maintain data integrity.
-* **Voice Alerts:** Integrated "Microsoft Zira" female voice for personalized "Thank You" greetings upon successful marking.
-* **Optimized Performance:** Frame scaling (0.25x) allows for smooth processing even on standard laptop hardware.
+* **Dynamic Roster Loading:** Automatically scans the `Known_Faces` directory on startup to encode any new personnel, eliminating the need for hardcoded image paths.
+* **Asynchronous Audio Queue:** Utilizes Python's `threading` and `queue` modules to handle simultaneous multi-face recognition without freezing the camera feed.
+* **Automated Email Reporting:** Includes a secure, built-in SMTP script (`send_report.py`) to dispatch the daily CSV attendance log directly to administrators.
+* **Smart Duplicate Prevention:** Logic ensures a person is only logged once per day to maintain data integrity, using an in-memory `Set` for lightning-fast verification.
+* **Precision Tuning:** Implements a strictness threshold using Euclidean distance to differentiate between highly similar faces.
 
 ---
 
 ## 🛠️ Tech Stack
 * **Language:** Python 3.11
-* **Computer Vision:** OpenCV (cv2)
-* **AI Engine:** face_recognition (built on dlib)
+* **Computer Vision:** OpenCV (`cv2`)
+* **AI Engine:** `face_recognition` (built on `dlib`)
 * **Data Handling:** NumPy (v1.x)
-* **Voice Engine:** pyttsx3
-* **Image Processing:** Pillow (PIL)
+* **Voice Engine:** `pyttsx3`
+* **Security & Automation:** `python-dotenv`, `smtplib`, `threading`
 
 ---
 
 ## 🚀 Installation & Setup
 
 ### 1. Clone the repository
-git clone https://github.com/your-username/Face-Recognition-Attendance.git
+```bash
+git clone [https://github.com/your-username/Face-Recognition-Attendance.git](https://github.com/your-username/Face-Recognition-Attendance.git)
 cd Face-Recognition-Attendance
+```
 
-### 2. Install specific dependencies
-This project requires specific versions to bypass common Windows/Dlib compatibility issues.
+### 2. Install dependencies
+This project uses a custom `requirements.txt` to bypass common Windows/C++ build errors and enforce library compatibility.
 
-**Install the AI Engine:**
-pip install cmake
-pip install https://github.com/z-mahmud22/Dlib_Windows_Python3.x/raw/main/dlib-19.24.1-cp311-cp311-win_amd64.whl
-pip install face_recognition
+```powershell
+pip install -r requirements.txt
+```
 
-**Install helper libraries & fix the Numpy 2.0 bug:**
-pip install "numpy<2"
-pip install opencv-python Pillow pyttsx3
+### 3. Environment Security Setup (For Automated Emails)
+To use the automated email reporter without exposing your credentials:
+1. Copy the `.env.example` file and rename it to `.env`.
+2. Add your Google App Password and target emails inside the `.env` file:
+   ```text
+   SENDER_EMAIL=your_email@gmail.com
+   APP_PASSWORD=your_16_letter_app_password
+   RECEIVER_EMAIL=professor_email@vitbhopal.ac.in
+   ```
 
 ---
 
 ## 📂 Project Structure
-* Known_Faces/ : Store .jpg or .jpeg photos of authorized users here.
-* main.py : The primary logic for vision, recognition, and logging.
-* Attendance.csv : Automatically generated log file.
-* project_report.md : Detailed technical analysis and CO5 case study documentation.
+* `Known_Faces/` : Store `.jpg` or `.jpeg` photos of authorized users here. The system dynamically loads these.
+* `main.py` : The primary multithreaded logic for vision, recognition, and CSV logging.
+* `send_report.py` : The SMTP script to securely email the daily log.
+* `Attendance.csv` : Automatically generated log file.
+* `requirements.txt` : Dependency manager enforcing Python 3.11 + Numpy 1.x compatibility.
+* `.env.example` : Template for local credential management.
 
 ---
 
-## 🔧 Troubleshooting (Real-World Solutions)
+## 🔧 Troubleshooting & Engineering Solutions
 
 During development, several critical "industry-standard" bugs were solved:
-1. Dependency Management: Fixed dlib installation by using a pre-compiled wheel binary specifically for Python 3.11.
-2. Memory Layout: Solved the "Unsupported image type" error by forcing images into a contiguous 8-bit RGB grid using np.ascontiguousarray.
-3. Numpy 2.0 Breaking Change: Downgraded to Numpy 1.26.4 to maintain compatibility with the C++ dlib backend.
+1. **Dlib Compilation/Memory Layout:** Bypassed Windows C++ build tools via a pre-compiled `.whl` and forced raw images into a contiguous 8-bit RGB grid (`np.ascontiguousarray`).
+2. **SAPI5 COM Object Lock:** Solved the `pyttsx3` threading crash by implementing a "Build & Destroy" worker queue, allowing the AI to announce multiple names simultaneously without locking the audio thread.
+3. **The "First Match" Flaw:** Upgraded the recognition logic from a basic Boolean match to an `np.argmin` distance calculator, ensuring the system strictly selects the *best* mathematical match when scanning crowded frames.
 
 ---
 
