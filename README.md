@@ -28,7 +28,7 @@ A high-performance, real-time attendance logging system developed as a **VITyart
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/your-username/Face-Recognition-Attendance.git](https://github.com/your-username/Face-Recognition-Attendance.git)
+git clone https://github.com/gujarparth/Smart-Attendance-System.git
 cd Face-Recognition-Attendance
 ```
 
