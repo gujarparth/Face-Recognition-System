@@ -1,19 +1,23 @@
-# Python environment and bytecode
+# --- Python Environment ---
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 venv/
 env/
+.venv/
+
+# --- Security & Credentials ---
+# (CRITICAL: Keeps your Google App Password off the internet)
 .env
+secrets.json
 
-# Visual Studio Code settings
-.vscode/
-
-# Project-specific data and outputs
-# (We ignore these to keep your personal logs and large images off GitHub)
+# --- Project Specific Data ---
+# (Keeps your actual, live attendance logs private)
 Attendance.csv
-Known_Faces/cleaned_shivang.jpg
 
-# OS-specific files
+# --- IDE & OS Settings ---
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
